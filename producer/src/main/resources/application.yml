@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+
+  cloud:
+    stream:
+      function:
+        definition: publishDate
+      bindings:
+        publishDate-out-0:
+          destination: date-created

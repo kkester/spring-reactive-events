@@ -1,0 +1,12 @@
+server:
+  port: 8081
+
+spring:
+  cloud:
+    stream:
+      function:
+        definition: processDate
+      bindings:
+        processDate-in-0:
+          destination: date-created
+          group: groupTest
