@@ -5,8 +5,10 @@ spring:
   cloud:
     stream:
       function:
-        definition: processDate
+        definition: playGame;gameSquareCreated
       bindings:
-        processDate-in-0:
-          destination: date-created
-          group: groupTest
+        playGame-in-0:
+          destination: game-played
+          group: pyl
+        gameSquareCreated-out-0:
+          destination: square-created

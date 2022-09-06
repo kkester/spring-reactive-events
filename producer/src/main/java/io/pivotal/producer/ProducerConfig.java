@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 @Slf4j
 public class ProducerConfig {
 
-    private final Sinks.Many<String> sink = Sinks.many().multicast().onBackpressureBuffer();
+    private final Sinks.Many<Game> sink = Sinks.many().multicast().onBackpressureBuffer();
 
 //    @Bean
 //    public Supplier<LocalDateTime> publishDate() {
@@ -24,13 +24,18 @@ public class ProducerConfig {
 //    }
 
     @Bean
-    public Consumer<String> publishMessage() {
-        return d -> sink.emitNext(d, Sinks.EmitFailureHandler.FAIL_FAST);
+    public Consumer<Game> publishGame() {
+        return game -> sink.emitNext(game, Sinks.EmitFailureHandler.FAIL_FAST);
     }
 
     @Bean
-    public Supplier<Flux<String>> publishDate() {
+    public Supplier<Flux<Game>> playGame() {
         return sink::asFlux;
+    }
+
+    @Bean
+    public Consumer<Square> acceptGameSquare(SquareQueue squareQueue) {
+        return squareQueue::add;
     }
 
 }

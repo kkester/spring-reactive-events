@@ -10,7 +10,10 @@ spring:
   cloud:
     stream:
       function:
-        definition: publishDate
+        definition: playGame;acceptGameSquare
       bindings:
-        publishDate-out-0:
-          destination: date-created
+        playGame-out-0:
+          destination: game-played
+        acceptGameSquare-in-0:
+          destination: square-created
+          group: groupTest
