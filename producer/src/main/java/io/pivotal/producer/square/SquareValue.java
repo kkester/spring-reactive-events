@@ -1,4 +1,4 @@
-package io.pivotal.producer;
+package io.pivotal.producer.square;
 
 public enum SquareValue {
 

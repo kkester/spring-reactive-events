@@ -14,12 +14,12 @@ import java.util.stream.IntStream;
 public class SquareService {
     private final Consumer<Square> publishMessage;
 
-    public void playGame(Game game) {
-        log.info("Creating Squares for game {}", game);
+    public void playGame(PylMessage pylMessage) {
+        log.info("Creating Squares for game {}", pylMessage);
         Random random = new Random();
         IntStream.range(0, 10).forEach(i -> {
             Square square = Square.builder()
-                    .gameId(game.getGameId())
+                    .gameId(pylMessage.getGameId())
                     .value(SquareValue.values()[random.nextInt(SquareValue.values().length)])
                     .build();
             publishMessage.accept(square);

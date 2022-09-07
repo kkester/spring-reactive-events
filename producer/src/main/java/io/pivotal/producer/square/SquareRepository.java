@@ -1,12 +1,12 @@
-package io.pivotal.producer;
+package io.pivotal.producer.square;
 
-import lombok.extern.slf4j.Slf4j;
+import io.pivotal.producer.square.Square;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 @Component
-public class SquareQueue {
+public class SquareRepository {
 
     private final Map<UUID,List<Square>> squareMap = new HashMap<>();
 

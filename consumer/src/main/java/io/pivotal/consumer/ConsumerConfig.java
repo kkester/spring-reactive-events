@@ -16,7 +16,7 @@ public class ConsumerConfig {
     private final Sinks.Many<Square> sink = Sinks.many().multicast().onBackpressureBuffer();
 
     @Bean
-    public Consumer<Game> playGame(SquareService squareService) {
+    public Consumer<PylMessage> playGame(SquareService squareService) {
         return squareService::playGame;
     }
 

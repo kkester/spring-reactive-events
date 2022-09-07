@@ -1,17 +1,16 @@
-package io.pivotal.consumer;
+package io.pivotal.producer.square;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder(toBuilder = true)
-public class Game {
+@Builder
+public class PylMessage {
     private UUID gameId;
 }

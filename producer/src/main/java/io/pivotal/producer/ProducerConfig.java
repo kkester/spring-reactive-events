@@ -1,5 +1,9 @@
 package io.pivotal.producer;
 
+import io.pivotal.producer.game.Game;
+import io.pivotal.producer.square.PylMessage;
+import io.pivotal.producer.square.Square;
+import io.pivotal.producer.square.SquareRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,29 +17,21 @@ import java.util.function.Supplier;
 @Slf4j
 public class ProducerConfig {
 
-    private final Sinks.Many<Game> sink = Sinks.many().multicast().onBackpressureBuffer();
-
-//    @Bean
-//    public Supplier<LocalDateTime> publishDate() {
-//        return () -> {
-//            log.info("Publishing Date");
-//            return LocalDateTime.now();
-//        };
-//    }
+    private final Sinks.Many<PylMessage> sink = Sinks.many().multicast().onBackpressureBuffer();
 
     @Bean
-    public Consumer<Game> publishGame() {
-        return game -> sink.emitNext(game, Sinks.EmitFailureHandler.FAIL_FAST);
+    public Consumer<PylMessage> publishPylMessage() {
+        return message -> sink.emitNext(message, Sinks.EmitFailureHandler.FAIL_FAST);
     }
 
     @Bean
-    public Supplier<Flux<Game>> playGame() {
+    public Supplier<Flux<PylMessage>> playGame() {
         return sink::asFlux;
     }
 
     @Bean
-    public Consumer<Square> acceptGameSquare(SquareQueue squareQueue) {
-        return squareQueue::add;
+    public Consumer<Square> acceptGameSquare(SquareRepository squareRepository) {
+        return squareRepository::add;
     }
 
 }

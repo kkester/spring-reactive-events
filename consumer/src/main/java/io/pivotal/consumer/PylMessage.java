@@ -1,4 +1,4 @@
-package io.pivotal.producer;
+package io.pivotal.consumer;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,9 +10,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Square {
+@Builder(toBuilder = true)
+public class PylMessage {
     private UUID gameId;
-    private SquareValue value;
-    private Boolean selected;
 }
