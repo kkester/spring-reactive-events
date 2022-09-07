@@ -1,6 +1,5 @@
 package io.pivotal.producer.square;
 
-import io.pivotal.producer.square.Square;
 import org.springframework.stereotype.Component;
 
 import java.util.*;

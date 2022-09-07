@@ -1,6 +1,5 @@
 package io.pivotal.producer;
 
-import io.pivotal.producer.game.Game;
 import io.pivotal.producer.square.PylMessage;
 import io.pivotal.producer.square.Square;
 import io.pivotal.producer.square.SquareRepository;

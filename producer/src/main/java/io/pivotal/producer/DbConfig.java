@@ -2,9 +2,11 @@ package io.pivotal.producer;
 
 import io.pivotal.producer.game.GameEntity;
 import io.r2dbc.spi.ConnectionFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.r2dbc.mapping.event.BeforeConvertCallback;
 import org.springframework.r2dbc.connection.init.CompositeDatabasePopulator;
 import org.springframework.r2dbc.connection.init.ConnectionFactoryInitializer;
@@ -17,12 +19,15 @@ import java.util.UUID;
 @Configuration
 public class DbConfig {
 
+    @Value("classpath:schema.sql")
+    Resource dbSchemaResource;
+
     public ConnectionFactoryInitializer initializer(ConnectionFactory connectionFactory) {
         ConnectionFactoryInitializer initializer = new ConnectionFactoryInitializer();
         initializer.setConnectionFactory(connectionFactory);
 
         CompositeDatabasePopulator populator = new CompositeDatabasePopulator();
-        populator.addPopulators(new ResourceDatabasePopulator(new ClassPathResource("schema.sql")));
+        populator.addPopulators(new ResourceDatabasePopulator(dbSchemaResource));
         initializer.setDatabasePopulator(populator);
 
         return initializer;
