@@ -9,6 +9,7 @@ import io.pivotal.producer.square.SquareAccumulator;
 import io.pivotal.producer.square.SquareValue;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -23,15 +24,15 @@ public class PylService {
     private final SquareAccumulator squareAccumulator;
     private final GameConverter gameConverter;
 
-    public Mono<Game> playGame(UUID gameId) {
+    public Mono<Game> playGame(UriComponentsBuilder uriBuilder, UUID gameId) {
         List<Square> squares = squareAccumulator.acquireSquares(gameId);
         return gameRepository.findById(gameId)
-                .map(gameEntity -> applySquareSelection(gameEntity, squares));
+                .map(gameEntity -> applySquareSelection(uriBuilder, gameEntity, squares));
     }
 
-    private Game applySquareSelection(GameEntity gameEntity, List<Square> gameSquares) {
+    private Game applySquareSelection(UriComponentsBuilder uriBuilder, GameEntity gameEntity, List<Square> gameSquares) {
         if (gameSquares.isEmpty() || gameEntity.getSpins() <= 0) {
-            return gameConverter.convert(gameEntity);
+            return gameConverter.convert(uriBuilder, gameEntity);
         }
 
         int selectedSquareIndex = new Random().nextInt(10);
@@ -47,6 +48,6 @@ public class PylService {
         }
         gameRepository.save(gameEntity).subscribe();
 
-        return gameConverter.convert(gameEntity, gameSquares, selectedSquare);
+        return gameConverter.convert(uriBuilder, gameEntity, gameSquares, selectedSquare);
     }
 }

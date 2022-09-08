@@ -10,8 +10,17 @@ This PoC demonstrates the following architecture, design, and coding strategies:
 4. Consuming Event Messages to RabbitMQ in a functional style
 
 ### Running the POC
-* TBD
+* Launch _ConsumerApplication_
+* Launch _ProducerApplication_
+* Open http://localhost:8080/pyl/games/new-game in a browser
 
+### Notes on working with R2DBC
+
+* JPA can support ID generation and inserts of entities with an ID. R2DBC will always try to update an entity with an id.
+* Turning on sql logging is DB specific.  For H2, the below property enables sql logging:
+```text
+logging.level.io.r2dbc.h2=TRACE
+```
 
 ### Notes on Functional Non-reactive Event Messaging
 
