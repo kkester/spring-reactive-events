@@ -7,6 +7,8 @@ import io.pivotal.producer.game.GameRepository;
 import io.pivotal.producer.square.Square;
 import io.pivotal.producer.square.SquareAccumulator;
 import io.pivotal.producer.square.SquareValue;
+import lombok.Builder;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -24,21 +26,48 @@ public class PylService {
     private final SquareAccumulator squareAccumulator;
     private final GameConverter gameConverter;
 
-    public Mono<Game> playGame(UriComponentsBuilder uriBuilder, UUID gameId) {
-        List<Square> squares = squareAccumulator.acquireSquares(gameId);
-        return gameRepository.findById(gameId)
-                .map(gameEntity -> applySquareSelection(uriBuilder, gameEntity, squares));
+    @Data
+    @Builder(toBuilder = true)
+    private static class GamePlay {
+        private GameEntity gameEntity;
+        private List<Square> squares;
+        private Square selectedSquare;
     }
 
-    private Game applySquareSelection(UriComponentsBuilder uriBuilder, GameEntity gameEntity, List<Square> gameSquares) {
-        if (gameSquares.isEmpty() || gameEntity.getSpins() <= 0) {
-            return gameConverter.convert(uriBuilder, gameEntity);
+    public Mono<Game> playGame(UriComponentsBuilder uriBuilder, UUID gameId) {
+        return gameRepository.findById(gameId)
+                .map(this::acquireSquares)
+                .map(this::applySquareSelection)
+                .map(this::updateGameEntity)
+                .map(gamePlay -> convertToGame(uriBuilder, gamePlay));
+    }
+
+    private GamePlay acquireSquares(GameEntity gameEntity) {
+        return GamePlay.builder()
+                .gameEntity(gameEntity)
+                .squares(squareAccumulator.acquireSquares(gameEntity.getId()))
+                .build();
+    }
+
+    private GamePlay applySquareSelection(GamePlay gamePlay) {
+        List<Square> gameSquares = gamePlay.getSquares();
+        if (gameSquares.isEmpty()) {
+            return gamePlay;
         }
 
         int selectedSquareIndex = new Random().nextInt(10);
         Square selectedSquare = gameSquares.get(selectedSquareIndex);
         selectedSquare.setSelected(true);
+        return gamePlay.toBuilder().selectedSquare(selectedSquare).build();
+    }
 
+    private GamePlay updateGameEntity(GamePlay gamePlay) {
+        Square selectedSquare = gamePlay.getSelectedSquare();
+        if (selectedSquare == null) {
+            return gamePlay;
+        }
+
+        GameEntity gameEntity = gamePlay.getGameEntity();
         gameEntity.setSpins(gameEntity.getSpins() - 1);
         if (SquareValue.WHAMMY.equals(selectedSquare.getValue())) {
             gameEntity.setTotalScore(0);
@@ -47,7 +76,14 @@ public class PylService {
             gameEntity.setSpins(gameEntity.getSpins() + selectedSquare.getValue().spins());
         }
         gameRepository.save(gameEntity).subscribe();
+        return gamePlay;
+    }
 
-        return gameConverter.convert(uriBuilder, gameEntity, gameSquares, selectedSquare);
+    private Game convertToGame(UriComponentsBuilder uriBuilder, GamePlay gamePlay) {
+        GameEntity gameEntity = gamePlay.gameEntity;
+        Square selectedSquare = gamePlay.getSelectedSquare();
+        return selectedSquare == null ?
+                gameConverter.convert(uriBuilder, gameEntity) :
+                gameConverter.convert(uriBuilder, gameEntity, gamePlay.getSquares(), selectedSquare);
     }
 }

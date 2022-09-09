@@ -5,11 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Square {
-    private SquareValue value;
-    private Boolean selected;
+public class SquareMessage {
+    private UUID gameId;
+    private String value;
 }

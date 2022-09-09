@@ -1,12 +1,6 @@
 server:
   port: 8080
 
-logging:
-  level:
-    io:
-      r2dbc:
-        h2: TRACE
-
 spring:
   jackson:
     default-property-inclusion: non_null

@@ -1,5 +1,7 @@
 package io.pivotal.producer.square;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum SquareValue {
 
     ONE_HUNDRED(100, 0),
@@ -11,8 +13,8 @@ public enum SquareValue {
     TWO_SPINS(0, 2),
     WHAMMY(0, 0);
 
-    private Integer value;
-    private Integer spins;
+    private final Integer value;
+    private final Integer spins;
 
     SquareValue(int value, int spins) {
         this.value = value;
@@ -25,5 +27,12 @@ public enum SquareValue {
 
     public Integer spins() {
         return this.spins;
+    }
+
+    @JsonValue
+    public String description() {
+        String valueDescription = value == 0 ? "" : "$" + value + " ";
+        String spinDescription = spins == 0 ? "" :  "+ " + spins + (spins == 1 ? " spin" : " spins");
+        return WHAMMY.equals(this) ? "WHAMMY" : (valueDescription + spinDescription).trim();
     }
 }

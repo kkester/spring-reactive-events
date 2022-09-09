@@ -8,6 +8,7 @@ This PoC demonstrates the following architecture, design, and coding strategies:
 2. Reactive H2 Persistence Layer
 3. Publishing Event Messages to RabbitMQ in a functional reactive style
 4. Consuming Event Messages to RabbitMQ in a functional style
+5. Custom Enum JSON Serialization
 
 ### Running the POC
 * Launch _ConsumerApplication_

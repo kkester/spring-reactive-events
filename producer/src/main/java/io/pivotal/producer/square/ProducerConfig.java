@@ -1,9 +1,5 @@
-package io.pivotal.producer;
+package io.pivotal.producer.square;
 
-import io.pivotal.producer.square.PylMessage;
-import io.pivotal.producer.square.Square;
-import io.pivotal.producer.square.SquareRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import reactor.core.publisher.Flux;
@@ -13,7 +9,6 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @Configuration
-@Slf4j
 public class ProducerConfig {
 
     private final Sinks.Many<PylMessage> sink = Sinks.many().multicast().onBackpressureBuffer();
@@ -29,7 +24,7 @@ public class ProducerConfig {
     }
 
     @Bean
-    public Consumer<Square> acceptGameSquare(SquareRepository squareRepository) {
+    public Consumer<SquareMessage> acceptGameSquare(SquareRepository squareRepository) {
         return squareRepository::add;
     }
 
