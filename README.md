@@ -15,13 +15,15 @@ This PoC demonstrates the following architecture, design, and coding strategies:
 * Launch _ProducerApplication_
 * Open http://localhost:8080/pyl/games/new-game in a browser
 
-### Notes on working with R2DBC
-
-* JPA can support ID generation and inserts of entities with an ID. R2DBC will always try to update an entity with an id.
-* Turning on sql logging is DB specific.  For H2, the below property enables sql logging:
+### Notes on working with Spring Data R2DBC
+There are a few caveats to using Spring Data R2DBC compared to Spring Data JPA
+1. Currently, R2DBC cannot auto generate the DB schema.
+2. If an Entity has an ID, R2DBC will always attempt to perform a SQL update.
+3. Turning on sql logging is DB specific.  For H2, the below property enables sql logging:
 ```text
 logging.level.io.r2dbc.h2=TRACE
 ```
+For the first two items, this POC contains a `DbConfig` class that handles schema and ID generation.
 
 ### Notes on Functional Non-reactive Event Messaging
 
