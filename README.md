@@ -25,8 +25,23 @@ logging.level.io.r2dbc.h2=TRACE
 ```
 For the first two items, this POC contains a `DbConfig` class that handles schema and ID generation.
 
+### Testing Strategy
+
+* Choose your test method [Naming Strategy](https://medium.com/@stefanovskyi/unit-test-naming-conventions-dd9208eadbea)
+* Spring Boot tests for Controllers.  Mockito tests for everything else.
+* Leveraged `WebTestClient` for Controller tests.
+
+#### Testing Definitions
+
+> [Unit Tests](https://martinfowler.com/bliki/UnitTest.html)
+
+> [Component Tests](https://martinfowler.com/bliki/ComponentTest.html)
+
+> [Integration Tests](https://martinfowler.com/bliki/IntegrationTest.html)
+
 ### Notes on Functional Non-reactive Event Messaging
 
+The following are code snipets showing how to consume and publish messages in a non-reactive fashion.
 ```java
 @Bean
 public Supplier<LocalDateTime> publishDate() {
